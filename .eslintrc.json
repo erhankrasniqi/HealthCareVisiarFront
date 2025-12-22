@@ -1,12 +1,34 @@
 {
-  "extends": [
-    "next/core-web-vitals",
-    "next/typescript",
-    "prettier"
-  ],
+  "extends": ["next/core-web-vitals", "next/typescript", "prettier"],
+  "plugins": ["boundaries"],
+  "settings": {
+    "boundaries/elements": [
+      { "type": "domain", "pattern": "src/domain/**" },
+      { "type": "application", "pattern": "src/application/**" },
+      { "type": "infrastructure", "pattern": "src/infrastructure/**" },
+      { "type": "presentation", "pattern": "src/presentation/**" },
+      { "type": "di", "pattern": "src/di/**" },
+      { "type": "app", "pattern": "app/**" }
+    ]
+  },
   "rules": {
     "@typescript-eslint/no-explicit-any": "warn",
     "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
-    "no-console": ["warn", { "allow": ["warn", "error"] }]
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+
+    "boundaries/element-types": [
+      "error",
+      {
+        "default": "disallow",
+        "rules": [
+          { "from": "domain", "allow": [] },
+          { "from": "application", "allow": ["domain"] },
+          { "from": "infrastructure", "allow": ["application", "domain"] },
+          { "from": "presentation", "allow": ["application", "domain"] },
+          { "from": "di", "allow": ["application", "domain", "infrastructure"] },
+          { "from": "app", "allow": ["presentation"] }
+        ]
+      }
+    ]
   }
 }
